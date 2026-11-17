@@ -44,4 +44,56 @@
 /** @brief 1=启用 CAN（MCAN0） */
 #define M0BSP_ENABLE_CAN 1
 
+/* ==================== 指示灯 / 电子开关 ==================== */
+
+/** @brief LED 翻转周期 (ms)：500 ms 翻转一次 */
+#define M0BSP_LED_TOGGLE_MS 500U
+/** @brief 电子开关相位时间 (ms)：高 3 s → 低 3 s */
+#define M0BSP_SWITCH_PHASE_MS 3000U
+/** @brief 心跳任务节拍 (ms)，LED 与开关的时间基准 */
+#define M0BSP_HEARTBEAT_TICK_MS 10U
+
+/* ==================== 蜂鸣器音型 ==================== */
+
+/** @brief 按键/编码器按下触发的提示音频率 (Hz) */
+#define M0BSP_BEEP_FREQ_HZ 2700U
+/** @brief 提示音时长 (ms) */
+#define M0BSP_BEEP_MS 60U
+/** @brief 上电变调：三个音高 (Hz)
+ *  @note TIMG12 是 16 位、80 MHz 不分频，周期上限 65535 → 最低约 1220 Hz，
+ *        所以音高不能低于 1.3 kHz。 */
+#define M0BSP_BOOT_TUNE_F1 1500U
+#define M0BSP_BOOT_TUNE_F2 2000U
+#define M0BSP_BOOT_TUNE_F3 2700U
+/** @brief 上电变调：每个音的时长 (ms) */
+#define M0BSP_BOOT_TUNE_NOTE_MS 120U
+
+/* ==================== OLED ==================== */
+
+/** @brief OLED I2C 从机地址 */
+#define M0BSP_OLED_ADDR 0x3CU
+/** @brief OLED 刷新周期 (ms) */
+#define M0BSP_OLED_REFRESH_MS 200U
+
+/* ==================== 任务参数 ==================== */
+
+/** @brief CPU 主频 (Hz)，用于调度器启动前的阻塞延时 */
+#define M0BSP_CPU_HZ 80000000U
+
+#define M0BSP_HEARTBEAT_STACK 0x100U
+#define M0BSP_HEARTBEAT_PRIO 2U
+#define M0BSP_INPUT_STACK 0x100U
+#define M0BSP_INPUT_PRIO 2U
+#define M0BSP_OLED_STACK 0x180U
+#define M0BSP_OLED_PRIO 1U
+
+/* ==================== 功能开关（新增） ==================== */
+
+/** @brief 1=启用 LED/电子开关心跳任务 */
+#define M0BSP_ENABLE_HEARTBEAT 1
+/** @brief 1=启用 EXTI 输入（KEY/编码器）与提示音任务 */
+#define M0BSP_ENABLE_INPUT 1
+/** @brief 1=启用 OLED 显示任务 */
+#define M0BSP_ENABLE_OLED 1
+
 #endif /* __HARDWARE_CONFIG_H__ */

@@ -17,12 +17,14 @@
 #include "ti_msp_dl_config.h" // IWYU pragma: keep
 
 #include "bsp/bsp_can.hpp"
+#include "bsp/bsp_gpio.hpp"
 #include "bsp/bsp_i2c.hpp"
 #include "bsp/bsp_pwm.hpp"
 #include "bsp/bsp_qei.hpp"
 #include "bsp/bsp_uart.hpp"
 
 #include "device/buzzer.hpp"
+#include "device/iic_oled.hpp"
 
 /* ==================== UART（5 路，全部 TX DMA） ==================== */
 
@@ -55,6 +57,16 @@ extern BspI2c bsp_i2c_2;    ///< I2C_2（I2C2，PA29/PA30）
 /* ==================== CAN ==================== */
 
 extern BspCan bsp_can; ///< MCAN0（CANFD0，PA12/PA13，经典 CAN 1 Mbps）
+
+/* ==================== GPIO 输出 ==================== */
+
+extern BspGpio bsp_led;    ///< LED（PB19，高电平点亮）
+extern BspGpio bsp_sw_5v;  ///< 5V 电子开关（PA11，高电平导通）
+extern BspGpio bsp_sw_vcc; ///< VCC 电子开关（PB6，高电平导通）
+
+/* ==================== OLED（I2C0） ==================== */
+
+extern IicOled device_oled; ///< SSD1306，地址 0x3C
 
 /**
  * @brief 绑定全部驱动对象到 SysConfig 实例

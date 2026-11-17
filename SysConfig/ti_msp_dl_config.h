@@ -381,15 +381,22 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define KEY_PORT                                                         (GPIOA)
 
 /* Defines for PIN_KEY: GPIOA.31 with pinCMx 6 on package pin 39 */
+// pins affected by this interrupt request:["PIN_KEY","PIN_ENCODER_SA","PIN_ENCODER_SS","PIN_ENCODER_SB"]
+#define KEY_INT_IRQN                                            (GPIOA_INT_IRQn)
+#define KEY_INT_IIDX                            (DL_INTERRUPT_GROUP1_IIDX_GPIOA)
+#define KEY_PIN_KEY_IIDX                                    (DL_GPIO_IIDX_DIO31)
 #define KEY_PIN_KEY_PIN                                         (DL_GPIO_PIN_31)
 #define KEY_PIN_KEY_IOMUX                                         (IOMUX_PINCM6)
 /* Defines for PIN_ENCODER_SA: GPIOA.9 with pinCMx 20 on package pin 55 */
+#define KEY_PIN_ENCODER_SA_IIDX                              (DL_GPIO_IIDX_DIO9)
 #define KEY_PIN_ENCODER_SA_PIN                                   (DL_GPIO_PIN_9)
 #define KEY_PIN_ENCODER_SA_IOMUX                                 (IOMUX_PINCM20)
 /* Defines for PIN_ENCODER_SS: GPIOA.8 with pinCMx 19 on package pin 54 */
+#define KEY_PIN_ENCODER_SS_IIDX                              (DL_GPIO_IIDX_DIO8)
 #define KEY_PIN_ENCODER_SS_PIN                                   (DL_GPIO_PIN_8)
 #define KEY_PIN_ENCODER_SS_IOMUX                                 (IOMUX_PINCM19)
 /* Defines for PIN_ENCODER_SB: GPIOA.7 with pinCMx 14 on package pin 49 */
+#define KEY_PIN_ENCODER_SB_IIDX                              (DL_GPIO_IIDX_DIO7)
 #define KEY_PIN_ENCODER_SB_PIN                                   (DL_GPIO_PIN_7)
 #define KEY_PIN_ENCODER_SB_IOMUX                                 (IOMUX_PINCM14)
 

@@ -28,6 +28,11 @@ BspI2c     bsp_i2c_2;
 BspCan     bsp_can;
 DeviceBuzzer device_buzzer;
 
+BspGpio  bsp_led;
+BspGpio  bsp_sw_5v;
+BspGpio  bsp_sw_vcc;
+IicOled  device_oled;
+
 /* ==================== 绑定 ==================== */
 
 void board_init()
@@ -52,7 +57,7 @@ void board_init()
                        M0BSP_BUZZER_PERIOD,
                        1U,
                        {GPIO_PWM_G12_BUZZER_C1_IDX}});
-  device_buzzer.init({&bsp_pwm_buzzer, 0U, M0BSP_BUZZER_PERIOD});
+  device_buzzer.init({&bsp_pwm_buzzer, 0U, M0BSP_BUZZER_PERIOD, PWM_G12_BUZZER_INST_CLK_FREQ});
 
   /* ---- 编码器 ---- */
   bsp_qei_g8.init({QEI_G8_INST});
@@ -62,6 +67,14 @@ void board_init()
   bsp_i2c_oled.init({I2C_0_OLED_INST});
   bsp_i2c_1.init({I2C_1_INST});
   bsp_i2c_2.init({I2C_2_INST});
+
+  /* ---- GPIO 输出：LED 与两路电子开关（初始全低） ---- */
+  bsp_led.init({LED_PORT, LED_PIN_LED_PIN});
+  bsp_sw_5v.init({BREAKER_PIN_5V_BREAKER_PORT, BREAKER_PIN_5V_BREAKER_PIN});
+  bsp_sw_vcc.init({BREAKER_PIN_VCC_BREAKER_PORT, BREAKER_PIN_VCC_BREAKER_PIN});
+  bsp_led.reset();
+  bsp_sw_5v.reset();
+  bsp_sw_vcc.reset();
 
 #if M0BSP_ENABLE_CAN
   /* ---- CAN：经典 CAN 1 Mbps ---- */
