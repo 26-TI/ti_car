@@ -16,8 +16,16 @@
 namespace
 {
   /* ---- 显示屏配置 ---- */
-  constexpr uint8_t  kOledAddr    = 0x3CU; ///< SSD1306 从机地址
-  constexpr uint32_t kRefreshMs   = 200U;  ///< 刷新周期
+  constexpr uint8_t  kOledAddr  = 0x3CU; ///< SSD1306 从机地址
+  constexpr uint32_t kRefreshMs = 200U;  ///< 刷新周期
+
+  /**
+   * @brief 屏幕方向
+   *
+   * 这块面板原来用 A1+C8 会"上下左右都颠倒"，改成 ROT_0（A0+C0）。
+   * 换屏后如果方向不对，依次试 ROT_180 / MIRROR_X / MIRROR_Y。
+   */
+  constexpr IicOled::Rotation kOledRotation = IicOled::Rotation::ROT_0;
 
   /** @brief 把一行补满 16 字符，避免数字变短时残留旧字符 */
   void pad_line(char *line)
@@ -39,7 +47,7 @@ void oled_task(void *arg)
 {
   (void)arg;
 
-  if (!device_oled.init(&bsp_i2c_oled, kOledAddr))
+  if (!device_oled.init(&bsp_i2c_oled, kOledAddr, kOledRotation))
   {
     vTaskDelete(nullptr);
     return;
