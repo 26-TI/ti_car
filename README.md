@@ -25,7 +25,7 @@ MSPM0G3519_CAR/
 │      └─ task/                业务任务，各自时序/音型/地址配置写在本文件顶部
 ├─ Flash/                      烧录脚本与 OpenOCD 配置、SVD
 ├─ .vscode/                    tasks / launch / settings（含 Task Button）
-└─ example/                    ★ 仅作迁移参考，已 gitignore，不属于本工程
+└─ (example/ 已移除)           迁移时的参考工程，不属于本工程、不随仓库提交
 ```
 
 ### 分层

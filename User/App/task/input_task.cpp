@@ -23,6 +23,8 @@ extern "C"
 {
   /** @brief SS + KEY 松开次数（中断里累加，OLED 显示用） */
   volatile uint32_t g_switch_press_count = 0U;
+  /** @brief 输入初始化故障：0=正常；1=事件队列创建失败；2=编码器绑定失败 */
+  volatile uint32_t g_input_fault = 0U;
 }
 
 namespace
@@ -96,14 +98,21 @@ void input_encoder_reset(void)
 void input_init(void)
 {
   s_events = xQueueCreate(8U, sizeof(uint8_t));
+  if (s_events == nullptr)
+  {
+    g_input_fault = 1U; /* 队列创建失败：按键仍计数，但不会响 */
+  }
 
-  /* 编码器：A/B 同端口、双边沿中断；极性/方向由 hardware_config.h 的宏选择 */
-  s_encoder.init({KEY_PORT,
-                  KEY_PIN_ENCODER_SA_PIN,
-                  KEY_PIN_ENCODER_SB_PIN,
-                  kEncoderInvertA,
-                  kEncoderInvertB,
-                  kEncoderInvertDir});
+  /* 编码器：A/B 同端口、双边沿中断；极性/方向见本文件顶部的 kEncoder* 常量 */
+  if (!s_encoder.init({KEY_PORT,
+                       KEY_PIN_ENCODER_SA_PIN,
+                       KEY_PIN_ENCODER_SB_PIN,
+                       kEncoderInvertA,
+                       kEncoderInvertB,
+                       kEncoderInvertDir}))
+  {
+    g_input_fault = 2U; /* 编码器绑定失败：on_edge() 会因 _ready=false 自动忽略 */
+  }
 
   BspGpioIrq::attach({KEY_PORT, KEY_PIN_ENCODER_SA_PIN, on_encoder_edge, &s_encoder});
   BspGpioIrq::attach({KEY_PORT, KEY_PIN_ENCODER_SB_PIN, on_encoder_edge, &s_encoder});

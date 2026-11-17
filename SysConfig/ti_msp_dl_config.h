@@ -170,6 +170,7 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define I2C_0_OLED_INST                                                     I2C0
 #define I2C_0_OLED_INST_IRQHandler                               I2C0_IRQHandler
 #define I2C_0_OLED_INST_INT_IRQN                                   I2C0_INT_IRQn
+#define I2C_0_OLED_BUS_SPEED_HZ                                           400000
 #define GPIO_I2C_0_OLED_SDA_PORT                                           GPIOB
 #define GPIO_I2C_0_OLED_SDA_PIN                                    DL_GPIO_PIN_1
 #define GPIO_I2C_0_OLED_IOMUX_SDA                                (IOMUX_PINCM13)
@@ -183,6 +184,7 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define I2C_2_INST                                                          I2C2
 #define I2C_2_INST_IRQHandler                                    I2C2_IRQHandler
 #define I2C_2_INST_INT_IRQN                                        I2C2_INT_IRQn
+#define I2C_2_BUS_SPEED_HZ                                                400000
 #define GPIO_I2C_2_SDA_PORT                                                GPIOA
 #define GPIO_I2C_2_SDA_PIN                                        DL_GPIO_PIN_30
 #define GPIO_I2C_2_IOMUX_SDA                                      (IOMUX_PINCM5)
@@ -196,6 +198,7 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define I2C_1_INST                                                          I2C1
 #define I2C_1_INST_IRQHandler                                    I2C1_IRQHandler
 #define I2C_1_INST_INT_IRQN                                        I2C1_INT_IRQn
+#define I2C_1_BUS_SPEED_HZ                                                400000
 #define GPIO_I2C_1_SDA_PORT                                                GPIOA
 #define GPIO_I2C_1_SDA_PIN                                         DL_GPIO_PIN_3
 #define GPIO_I2C_1_IOMUX_SDA                                      (IOMUX_PINCM8)

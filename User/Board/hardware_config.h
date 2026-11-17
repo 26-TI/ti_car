@@ -18,6 +18,11 @@
 #ifndef __HARDWARE_CONFIG_H__
 #define __HARDWARE_CONFIG_H__
 
+/* ==================== 时钟 ==================== */
+
+/** @brief CPU 主频 (Hz)：用于周期换算与调度器启动前的阻塞延时（SYSPLL 80 MHz） */
+#define M0BSP_CPU_HZ 80000000U
+
 /* ==================== UART ==================== */
 
 /** @brief UART TX DMA 缓冲区大小（与 board_instances.hpp 一致） */
@@ -35,7 +40,7 @@
 /** @brief 蜂鸣器发声频率 (Hz) */
 #define M0BSP_BUZZER_FREQ_HZ 2700U
 /** @brief 蜂鸣器 PWM 装载值 = 定时器时钟 / 发声频率 */
-#define M0BSP_BUZZER_PERIOD (80000000U / M0BSP_BUZZER_FREQ_HZ)
+#define M0BSP_BUZZER_PERIOD (M0BSP_CPU_HZ / M0BSP_BUZZER_FREQ_HZ)
 
 /* ==================== 库自带任务（M0BSP） ==================== */
 
@@ -50,10 +55,5 @@
 #define M0BSP_ENABLE_CPU_MONITOR 1
 /** @brief 1=启用 CAN（MCAN0） */
 #define M0BSP_ENABLE_CAN 1
-
-/* ==================== 时钟 ==================== */
-
-/** @brief CPU 主频 (Hz)，用于调度器启动前的阻塞延时（SYSPLL 80 MHz） */
-#define M0BSP_CPU_HZ 80000000U
 
 #endif /* __HARDWARE_CONFIG_H__ */

@@ -26,6 +26,10 @@
 #include "device/buzzer.hpp"
 #include "device/iic_oled.hpp"
 
+/* UART 对象模板实参必须与 board_instances.hpp 的 X(pfx, bufsize) 一致 */
+static_assert(M0BSP_UART_BUF_SIZE == 64U,
+              "M0BSP_UART_BUF_SIZE 必须等于 board_instances.hpp 里的 X(pfx, 64)");
+
 /* ==================== UART（5 路，全部 TX DMA） ==================== */
 
 extern BspUart<M0BSP_UART_BUF_SIZE> bsp_uart0; ///< UART_0：PA0/PA1
@@ -73,7 +77,30 @@ extern IicOled device_oled; ///< SSD1306，地址 0x3C
  *
  * @note 必须在 SYSCFG_DL_init() 之后、vTaskStartScheduler() 之前调用：
  *       内部会创建 FreeRTOS StreamBuffer 并使能 NVIC。
+ *       任何一步失败只记录到 g_board_fault，不阻塞启动。
  */
 void board_init();
+
+/* ==================== 初始化故障位图 ==================== */
+
+/** @brief board_init() 失败项；调试器直接看 g_board_fault 即可 */
+enum BoardFaultBits : uint32_t
+{
+  BOARD_FAULT_UART0     = 1U << 0,
+  BOARD_FAULT_UART1     = 1U << 1,
+  BOARD_FAULT_UART3     = 1U << 2,
+  BOARD_FAULT_UART4     = 1U << 3,
+  BOARD_FAULT_UART7     = 1U << 4,
+  BOARD_FAULT_PWM_A0    = 1U << 5,
+  BOARD_FAULT_BUZZER    = 1U << 6,
+  BOARD_FAULT_QEI_G8    = 1U << 7,
+  BOARD_FAULT_QEI_G9    = 1U << 8,
+  BOARD_FAULT_I2C_OLED  = 1U << 9,
+  BOARD_FAULT_I2C_1     = 1U << 10,
+  BOARD_FAULT_I2C_2     = 1U << 11,
+};
+
+/** @brief 0 = 全部成功；位定义见 BoardFaultBits */
+extern volatile uint32_t g_board_fault;
 
 #endif /* __BOARD_CFG_HPP__ */

@@ -33,23 +33,40 @@ BspGpio  bsp_sw_5v;
 BspGpio  bsp_sw_vcc;
 IicOled  device_oled;
 
+/** @brief 0=全部初始化成功；位定义见 board_cfg.hpp 的 BoardFaultBits */
+volatile uint32_t g_board_fault = 0U;
+
 /* ==================== 绑定 ==================== */
 
 void board_init()
 {
+  auto check = [](bool ok, uint32_t bit)
+  {
+    if (!ok)
+    {
+      g_board_fault |= bit;
+    }
+  };
+
   /* ---- UART：115200 8N1，RX 中断 + TX DMA ---- */
-  bsp_uart0.init({UART_0_INST, UART_0_INST_INT_IRQN, DMA_CH0_CHAN_ID, UART_0_INST_DMA_TRIGGER});
-  bsp_uart1.init({UART_1_INST, UART_1_INST_INT_IRQN, DMA_CH1_CHAN_ID, UART_1_INST_DMA_TRIGGER});
-  bsp_uart3.init({UART_3_INST, UART_3_INST_INT_IRQN, DMA_CH2_CHAN_ID, UART_3_INST_DMA_TRIGGER});
-  bsp_uart4.init({UART_4_INST, UART_4_INST_INT_IRQN, DMA_CH3_CHAN_ID, UART_4_INST_DMA_TRIGGER});
-  bsp_uart7.init({UART_7_INST, UART_7_INST_INT_IRQN, DMA_CH4_CHAN_ID, UART_7_INST_DMA_TRIGGER});
+  check(bsp_uart0.init({UART_0_INST, UART_0_INST_INT_IRQN, DMA_CH0_CHAN_ID, UART_0_INST_DMA_TRIGGER}),
+        BOARD_FAULT_UART0);
+  check(bsp_uart1.init({UART_1_INST, UART_1_INST_INT_IRQN, DMA_CH1_CHAN_ID, UART_1_INST_DMA_TRIGGER}),
+        BOARD_FAULT_UART1);
+  check(bsp_uart3.init({UART_3_INST, UART_3_INST_INT_IRQN, DMA_CH2_CHAN_ID, UART_3_INST_DMA_TRIGGER}),
+        BOARD_FAULT_UART3);
+  check(bsp_uart4.init({UART_4_INST, UART_4_INST_INT_IRQN, DMA_CH3_CHAN_ID, UART_4_INST_DMA_TRIGGER}),
+        BOARD_FAULT_UART4);
+  check(bsp_uart7.init({UART_7_INST, UART_7_INST_INT_IRQN, DMA_CH4_CHAN_ID, UART_7_INST_DMA_TRIGGER}),
+        BOARD_FAULT_UART7);
 
   /* ---- PWM：TIMA0 四通道 ---- */
-  bsp_pwm_a0.init({PWM_A0_INST,
-                   PWM_A0_INST_CLK_FREQ,
-                   M0BSP_PWM_A0_PERIOD,
-                   M0BSP_PWM_A0_CHANNELS,
-                   {GPIO_PWM_A0_C0_IDX, GPIO_PWM_A0_C1_IDX, GPIO_PWM_A0_C2_IDX, GPIO_PWM_A0_C3_IDX}});
+  check(bsp_pwm_a0.init({PWM_A0_INST,
+                         PWM_A0_INST_CLK_FREQ,
+                         M0BSP_PWM_A0_PERIOD,
+                         M0BSP_PWM_A0_CHANNELS,
+                         {GPIO_PWM_A0_C0_IDX, GPIO_PWM_A0_C1_IDX, GPIO_PWM_A0_C2_IDX, GPIO_PWM_A0_C3_IDX}}),
+        BOARD_FAULT_PWM_A0);
 
   /* ---- PWM：TIMG12 → 蜂鸣器（device 层封装） ---- */
   bsp_pwm_buzzer.init({PWM_G12_BUZZER_INST,
@@ -57,16 +74,17 @@ void board_init()
                        M0BSP_BUZZER_PERIOD,
                        1U,
                        {GPIO_PWM_G12_BUZZER_C1_IDX}});
-  device_buzzer.init({&bsp_pwm_buzzer, 0U, M0BSP_BUZZER_PERIOD, PWM_G12_BUZZER_INST_CLK_FREQ});
+  check(device_buzzer.init({&bsp_pwm_buzzer, 0U, M0BSP_BUZZER_PERIOD, PWM_G12_BUZZER_INST_CLK_FREQ}),
+        BOARD_FAULT_BUZZER);
 
-  /* ---- 编码器 ---- */
-  bsp_qei_g8.init({QEI_G8_INST});
-  bsp_qei_g9.init({QEI_G9_INST});
+  /* ---- 编码器（QEI 外设，仅绑定；EXTI 4 倍频在 input_task 里） ---- */
+  check(bsp_qei_g8.init({QEI_G8_INST}), BOARD_FAULT_QEI_G8);
+  check(bsp_qei_g9.init({QEI_G9_INST}), BOARD_FAULT_QEI_G9);
 
   /* ---- I2C ---- */
-  bsp_i2c_oled.init({I2C_0_OLED_INST});
-  bsp_i2c_1.init({I2C_1_INST});
-  bsp_i2c_2.init({I2C_2_INST});
+  check(bsp_i2c_oled.init({I2C_0_OLED_INST}), BOARD_FAULT_I2C_OLED);
+  check(bsp_i2c_1.init({I2C_1_INST}), BOARD_FAULT_I2C_1);
+  check(bsp_i2c_2.init({I2C_2_INST}), BOARD_FAULT_I2C_2);
 
   /* ---- GPIO 输出：LED 与两路电子开关（初始全低） ---- */
   bsp_led.init({LED_PORT, LED_PIN_LED_PIN});

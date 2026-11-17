@@ -28,10 +28,12 @@ extern "C"
 
   /**
    * @brief 节拍钩子（configUSE_TICK_HOOK = 1）
+   *
+   * @note 每 tick +1000，使 CPU_RunTime 的单位是 µs（与 FreeRTOSConfig.h 的说明一致）。
    */
   void vApplicationTickHook(void)
   {
-    CPU_RunTime = CPU_RunTime + 1UL;
+    CPU_RunTime = CPU_RunTime + 1000UL;
   }
 
   /**

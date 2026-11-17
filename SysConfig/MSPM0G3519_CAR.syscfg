@@ -168,6 +168,8 @@ GPIO4.associatedPins[0].assignedPin  = "19";
 GPIO4.associatedPins[0].pin.$assign  = "PB19";
 
 I2C1.$name                             = "I2C_0_OLED";
+I2C1.basicEnableController             = true;
+I2C1.basicControllerBusSpeed           = 400000;
 I2C1.peripheral.$assign                = "I2C0";
 I2C1.peripheral.sdaPin.$assign         = "PB1";
 I2C1.peripheral.sclPin.$assign         = "PB0";
@@ -181,6 +183,8 @@ I2C1.sclPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
 I2C1.sclPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric15";
 
 I2C2.$name                             = "I2C_2";
+I2C2.basicEnableController             = true;
+I2C2.basicControllerBusSpeed           = 400000;
 I2C2.peripheral.$assign                = "I2C2";
 I2C2.peripheral.sdaPin.$assign         = "PA30";
 I2C2.peripheral.sclPin.$assign         = "PA29";
@@ -194,6 +198,8 @@ I2C2.sclPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
 I2C2.sclPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric17";
 
 I2C3.$name                             = "I2C_1";
+I2C3.basicEnableController             = true;
+I2C3.basicControllerBusSpeed           = 400000;
 I2C3.peripheral.$assign                = "I2C1";
 I2C3.peripheral.sdaPin.$assign         = "PA3";
 I2C3.peripheral.sclPin.$assign         = "PA4";
