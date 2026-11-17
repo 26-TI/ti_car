@@ -1,4 +1,4 @@
-# MSPM0G3519_CAR
+# ti_car
 
 TI **MSPM0G3519**（Cortex-M0+，LQFP-64 PM）车辆控制板工程：FreeRTOS + M0BSP 板级库 + TI SysConfig 生成代码，
 一套 CMake presets 同时支持 **Linux / Windows** 的编译、烧录、调试。
@@ -8,7 +8,7 @@ TI **MSPM0G3519**（Cortex-M0+，LQFP-64 PM）车辆控制板工程：FreeRTOS +
 ## 1. 目录结构
 
 ```
-MSPM0G3519_CAR/
+ti_car/
 ├─ CMakeLists.txt              构建入口（CMake ≥ 3.27 + Ninja）
 ├─ CMakePresets.json           Debug / Release / RelWithDebInfo（产物 build/<preset>/）
 ├─ mspm0g351x_base.cmake       MSPM0 工具链/编译/链接集中配置（SDK 路径三级回退）
@@ -73,7 +73,7 @@ SDK / SysConfig 路径不必改文件，三种方式任选：
 ## 3. 首次获取与配置
 
 ```bash
-git clone <本仓库> && cd MSPM0G3519_CAR
+git clone <本仓库> && cd ti_car
 git submodule update --init --recursive      # 拉取 Middlewares/M0BSP
 python3 Middlewares/M0BSP/tools/init_project.py   # 结构自检 / 补齐（幂等，可重复运行）
 ```
@@ -87,11 +87,11 @@ cmake --preset Debug
 cmake --build --preset Debug
 ```
 
-产物：`build/Debug/MSPM0G3519_CAR.elf`，链接时会打印内存占用（`memory.map` 同目录）。
+产物：`build/Debug/ti_car.elf`，链接时会打印内存占用（`memory.map` 同目录）。
 
 VS Code 里直接按 **`[🔨 编译]`** 按钮，或 `Ctrl+Shift+B`。
 
-> 打开工程时请把 **`MSPM0G3519_CAR/` 目录本身**作为工作区文件夹，
+> 打开工程时请把 **`ti_car/` 目录本身**作为工作区文件夹，
 > 否则 `.vscode/tasks.json` 与 Task Button 不会生效。
 
 ---

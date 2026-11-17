@@ -1,14 +1,14 @@
 # ==============================================================================
-# MSPM0G3519_CAR —— MSPM0G3519 (Cortex-M0+) + FreeRTOS + M0BSP
+# ti_car —— MSPM0G3519 (Cortex-M0+) + FreeRTOS + M0BSP
 #
 # 构建：cmake --preset Debug && cmake --build --preset Debug
-# 产物：build/<preset>/MSPM0G3519_CAR.elf
+# 产物：build/<preset>/ti_car.elf
 # ==============================================================================
 cmake_minimum_required(VERSION 3.27)
 
 include(mspm0g351x_base.cmake)
 
-project(MSPM0G3519_CAR C CXX ASM)
+project(ti_car C CXX ASM)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

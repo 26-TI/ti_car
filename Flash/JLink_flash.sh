@@ -36,7 +36,7 @@ TEMP_SCRIPT="build/jlink_flash.jlink"
 cat > "$TEMP_SCRIPT" <<EOF
 device MSPM0G3519
 if SWD
-speed 4000
+speed 50000
 halt
 loadfile $ELF_FILE
 r

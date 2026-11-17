@@ -8,7 +8,7 @@
       "name": "jlink-debug",
       "servertype": "jlink",
       "interface": "swd",
-      "executable": "${workspaceFolder}/build/Debug/MSPM0G3519_CAR.elf",
+      "executable": "${workspaceFolder}/build/Debug/ti_car.elf",
       "runToEntryPoint": "main",
       "device": "MSPM0G3519",
       "svdFile": "${workspaceFolder}/Flash/MSPM0G351X.svd",
@@ -26,7 +26,7 @@
       // 用启动器自动挑选"支持 MSPM0"的 openocd（系统自带的 0.12.0 没有 mspm0 驱动）
       // Windows 下请把这一行改成你的 openocd.exe 路径，或删掉它并保证 PATH 里的版本支持 MSPM0
       "serverpath": "${workspaceFolder}/Flash/openocd-server",
-      "executable": "${workspaceFolder}/build/Debug/MSPM0G3519_CAR.elf",
+      "executable": "${workspaceFolder}/build/Debug/ti_car.elf",
       "runToEntryPoint": "main",
       "configFiles": ["${workspaceFolder}/Flash/daplink.cfg"],
       "gdbPath": "arm-none-eabi-gdb",

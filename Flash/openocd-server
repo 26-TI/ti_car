@@ -9,10 +9,12 @@
 #
 # 选择顺序：
 #   1. 环境变量 OPENOCD_BIN（你显式指定的）
-#   2. EmberProbe 扩展自带（VS Code globalStorage 下的 openocd-*/bin/openocd）
-#   3. /usr/local/bin/openocd
-#   4. PATH 里的 openocd
-#   判定标准：二进制里含 mspm0 驱动（strings 里有独立的 "mspm0" 符号）
+#   2. 本机自编译的 OpenOCD（默认 ~/AAA/config_environment/安装包/openocd/src/openocd，
+#      可用 OPENOCD_BUILD 覆盖）—— 器件表里有 MSPM0G3519（0x1508/0x13）
+#   3. EmberProbe 扩展自带（器件表较旧，认不出 MSPM0G3519）
+#   4. /usr/local/bin/openocd
+#   5. PATH 里的 openocd
+#   判定标准：二进制里含 mspm0 驱动
 #
 # 用法（与 openocd 完全一致，额外参数原样透传）：
 #   ./Flash/openocd-server -f Flash/daplink.cfg -c "program app.elf verify reset exit"
@@ -37,6 +39,7 @@ pick_openocd() {
     local c
     for c in \
         "${OPENOCD_BIN:-}" \
+        "${OPENOCD_BUILD:-$HOME/AAA/config_environment/安装包/openocd/src/openocd}" \
         "$HOME"/.config/Code/User/globalStorage/bakesheep.emberprobe/emberprobe/openocd-*/bin/openocd \
         /usr/local/bin/openocd \
         "$(command -v openocd 2>/dev/null || true)"
@@ -56,6 +59,7 @@ pick_scripts() {
     local c
     for c in \
         "${OPENOCD_SCRIPTS:-}" \
+        "$bin_dir/../tcl" \
         "$bin_dir/../share/openocd/scripts" \
         "$bin_dir/../openocd/scripts" \
         "$(dirname "$bin_dir")/share/openocd/scripts" \

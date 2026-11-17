@@ -16,7 +16,7 @@
 namespace
 {
   constexpr uint32_t kTickMs        = 10U;   ///< 任务节拍
-  constexpr uint32_t kLedToggleMs   = 500U;  ///< LED 翻转周期
+  constexpr uint32_t kLedToggleMs   = 1000U;  ///< LED 翻转周期
   constexpr uint32_t kSwitchPhaseMs = 3000U; ///< 电子开关高/低相位时长
 } // namespace
 
@@ -34,7 +34,7 @@ void heartbeat_task(void *arg)
   bsp_sw_vcc.write(sw_high);
 
   /* 打印口自检：看到这一行说明 UART_7 与 TX DMA 都通了 */
-  board_printf("\r\n[MSPM0G3519_CAR] boot ok, build %s %s\r\n", __DATE__, __TIME__);
+  board_printf("\r\n[ti_car] boot ok, build %s %s\r\n", __DATE__, __TIME__);
 
   TickType_t last = xTaskGetTickCount();
 
