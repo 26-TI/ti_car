@@ -161,6 +161,7 @@ cmake --build --preset Debug --clean-first                        # 全量重编
 
 ## 10. 文档
 
+- `实施记录与代码检查指南.md` —— 从 0 到 1 的完整实施记录 + 逐项代码检查路径
 - `docs/迁移映射.md` —— `MSPM0_FreeRTOS_BDC_Core` → 本工程的逐项映射（旧路径 → 新路径）
 - `docs/SysConfig配置说明.md` —— 本次对 `.syscfg` 做的改动与理由
 - `Flash/README.md` —— 烧录脚本细节
