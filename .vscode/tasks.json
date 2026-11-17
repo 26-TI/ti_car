@@ -87,8 +87,8 @@
             "detail": "打开 TI SysConfig 界面编辑 SysConfig/*.syscfg，关闭后自动重新生成",
             "type": "process",
             "command": "python3",
-            "args": ["tools/sysconfig_ui.py"],
-            "windows": { "command": "python", "args": ["tools\\sysconfig_ui.py"] },
+            "args": ["Middlewares/M0BSP/tools/sysconfig_ui.py"],
+            "windows": { "command": "python", "args": ["Middlewares\\M0BSP\\tools\\sysconfig_ui.py"] },
             "options": { "cwd": "${workspaceFolder}" },
             "group": "build",
             "problemMatcher": []
@@ -98,8 +98,8 @@
             "detail": "只跑 SysConfig CLI 生成代码（不开界面）",
             "type": "process",
             "command": "python3",
-            "args": ["tools/sysconfig_ui.py", "--gen"],
-            "windows": { "command": "python", "args": ["tools\\sysconfig_ui.py", "--gen"] },
+            "args": ["Middlewares/M0BSP/tools/sysconfig_ui.py", "--gen"],
+            "windows": { "command": "python", "args": ["Middlewares\\M0BSP\\tools\\sysconfig_ui.py", "--gen"] },
             "options": { "cwd": "${workspaceFolder}" },
             "group": "build",
             "problemMatcher": []

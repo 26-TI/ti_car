@@ -63,7 +63,7 @@ UART_x_INST_INT_IRQN
 
 1. 改 `board_instances.hpp`：`X(UART_3, 64)` → `X(UART_DEBUG, 64)`
 2. 改 `board_cfg.cpp`：`bsp_uart3.init({UART_DEBUG_INST, …})`
-3. 重新生成 + 编译即可，`Middleware/M0BSP` 一行都不用动
+3. 重新生成 + 编译即可，`Middlewares/M0BSP` 一行都不用动
 
 > 说明：中断函数名由 SysConfig 的 `_INST_IRQHandler` 宏决定（`UART_3_INST_IRQHandler → UART3_IRQHandler`），
 > 所以改名不会改变真正的中断向量名。

@@ -13,15 +13,16 @@ MSPM0G3519_CAR/
 ├─ CMakePresets.json           Debug / Release / RelWithDebInfo（产物 build/<preset>/）
 ├─ mspm0g351x_base.cmake       MSPM0 工具链/编译/链接集中配置（SDK 路径三级回退）
 ├─ SysConfig/                  SysConfig 工程：*.syscfg + 生成代码（唯一外设配置源）
-├─ Middleware/
+├─ Middlewares/
 │  ├─ FreeRTOS/                直接放置，非 submodule
 │  └─ M0BSP/                   git submodule → https://github.com/Rh-i/M0BSP.git
+│     └─ tools/                init_project.py（结构自检/补齐）、sysconfig_ui.py（开界面）
+│                              check_layers.py（分层检查）
 ├─ User/
 │  ├─ Board/                   板级唯一配置入口：board_cfg / board_instances / hardware_config
 │  │                           / FreeRTOSConfig.h / freertos_hooks.cpp / sysmem.c
 │  └─ App/                     main.cpp + app_init()（默认只创建系统任务）
 ├─ Flash/                      烧录脚本与 OpenOCD 配置、SVD
-├─ tools/                      init_project.py（结构自检/补齐）、sysconfig_ui.py（开界面）
 ├─ .vscode/                    tasks / launch / settings（含 Task Button）
 └─ example/                    ★ 仅作迁移参考，已 gitignore，不属于本工程
 ```
@@ -29,20 +30,20 @@ MSPM0G3519_CAR/
 ### 分层
 
 ```
-User/App                   业务（本工程默认没有业务任务）
+User/App                        业务（本工程默认没有业务任务）
     ↑
-Middleware/M0BSP/code/tasks     系统任务（cpu_monitor）
+Middlewares/M0BSP/code/tasks     系统任务（cpu_monitor）
     ↑
-Middleware/M0BSP/code/device    器件（oled / track / ins / gyro / motor / buzzer）
+Middlewares/M0BSP/code/device    器件（oled / track / ins / gyro / motor / buzzer）
     ↑
-Middleware/M0BSP/code/service   服务（user_system 格式化输出）
+Middlewares/M0BSP/code/service   服务（user_system 格式化输出）
     ↑
-Middleware/M0BSP/code/bsp       驱动（uart / pwm / qei / can / i2c / gpio / key）
+Middlewares/M0BSP/code/bsp       驱动（uart / pwm / qei / can / i2c / gpio / key）
     ↑
-Middleware/M0BSP/code/algorithm 算法（pid）
+Middlewares/M0BSP/code/algorithm 算法（pid）
 ```
 
-分层由 `python3 Middleware/M0BSP/tools/check_layers.py` 强制检查。
+分层由 `python3 Middlewares/M0BSP/tools/check_layers.py` 强制检查。
 **库内不出现任何 SysConfig 实例名**：实例名只写在 `User/Board/board_instances.hpp` 与 `board_cfg.cpp`。
 
 ---
@@ -72,8 +73,8 @@ SDK / SysConfig 路径不必改文件，三种方式任选：
 
 ```bash
 git clone <本仓库> && cd MSPM0G3519_CAR
-git submodule update --init --recursive      # 拉取 Middleware/M0BSP
-python3 tools/init_project.py                # 结构自检 / 补齐（幂等，可重复运行）
+git submodule update --init --recursive      # 拉取 Middlewares/M0BSP
+python3 Middlewares/M0BSP/tools/init_project.py   # 结构自检 / 补齐（幂等，可重复运行）
 ```
 
 ## 4. 编译
@@ -97,11 +98,11 @@ VS Code 里直接按 **`[🔨 编译]`** 按钮，或 `Ctrl+Shift+B`。
 ## 5. SysConfig
 
 - 配置文件：`SysConfig/MSPM0G3519_CAR.syscfg`，生成物 `SysConfig/ti_msp_dl_config.{c,h}`、`device*.lds` 等。
-- 界面：VS Code 按钮 **`[⚙️ SysConfig]`**（= `python3 tools/sysconfig_ui.py`）：打开 GUI → 保存并关闭 → 自动跑 CLI 重新生成。
+- 界面：VS Code 按钮 **`[⚙️ SysConfig]`**（= `python3 Middlewares/M0BSP/tools/sysconfig_ui.py`）：打开 GUI → 保存并关闭 → 自动跑 CLI 重新生成。
 - 只生成不进界面：**`[🧩 生成配置]`**（`--gen`）或
 
 ```bash
-python3 tools/sysconfig_ui.py --gen
+python3 Middlewares/M0BSP/tools/sysconfig_ui.py --gen
 ```
 
 当前 syscfg 的关键配置（详见 `docs/SysConfig配置说明.md`）：
@@ -143,10 +144,10 @@ python3 tools/sysconfig_ui.py --gen
 ## 8. 常用命令
 
 ```bash
-python3 tools/init_project.py --check                       # 结构自检
-python3 Middleware/M0BSP/tools/check_layers.py              # 分层检查
-python3 tools/sysconfig_ui.py --dry-run                     # 看 SysConfig 将执行的命令
-cmake --build --preset Debug --clean-first                  # 全量重编
+python3 Middlewares/M0BSP/tools/init_project.py --check           # 结构自检
+python3 Middlewares/M0BSP/tools/check_layers.py                   # 分层检查
+python3 Middlewares/M0BSP/tools/sysconfig_ui.py --dry-run         # 看 SysConfig 将执行的命令
+cmake --build --preset Debug --clean-first                        # 全量重编
 ```
 
 ## 9. 已知限制（本版）

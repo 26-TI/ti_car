@@ -14,10 +14,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(FREERTOS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Middleware/FreeRTOS)
+set(FREERTOS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/FreeRTOS)
 
 # ------------------------------------------------------------------------------
-# FreeRTOS（Middleware/FreeRTOS 直接放置，非 submodule、无子目录）
+# FreeRTOS（Middlewares/FreeRTOS 直接放置，非 submodule、无子目录）
 # ------------------------------------------------------------------------------
 file(GLOB FREERTOS_C_SOURCES "${FREERTOS_DIR}/*.c")
 file(GLOB FREERTOS_MEMMANG_C_SOURCES "${FREERTOS_DIR}/portable/MemMang/heap_4.c")
@@ -51,14 +51,14 @@ include_directories(
 )
 
 # ------------------------------------------------------------------------------
-# M0BSP（git submodule：Middleware/M0BSP → Rh-i/M0BSP）
+# M0BSP（git submodule：Middlewares/M0BSP → Rh-i/M0BSP）
 # 未初始化 submodule 时给出明确提示，而不是一堆未定义符号。
 # ------------------------------------------------------------------------------
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Middleware/M0BSP/CMakeLists.txt)
-    add_subdirectory(Middleware/M0BSP)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Middlewares/M0BSP/CMakeLists.txt)
+    add_subdirectory(Middlewares/M0BSP)
     target_link_libraries(${CMAKE_PROJECT_NAME}.elf m0bsp)
     target_compile_features(${CMAKE_PROJECT_NAME}.elf PRIVATE cxx_std_20)
 else()
     message(WARNING
-        "Middleware/M0BSP 不存在：请先执行 git submodule update --init --recursive 再配置。")
+        "Middlewares/M0BSP 不存在：请先执行 git submodule update --init --recursive 再配置。")
 endif()
