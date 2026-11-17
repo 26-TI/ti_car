@@ -55,36 +55,49 @@ namespace
   constexpr bool kShowOrientationTest = true;
 
   /**
-   * @brief 方向自检页：边框 + 四角标注
+   * @brief 方向自检页：只用几何图形，不依赖字形，便于照片判定
    *
-   * 画面含义（屏幕应当的“正方向”）：
-   *   TL(左上)           TR(右上)
+   * 缓冲里的布局（屏幕应有的正方向）：
+   *   ━━━━━━━━━━━━━━━━━━━━━  ← 第 0 页整条横粗线（上边）
+   *   ▌████                     ← 左边竖粗线（第 0 列）+ 左上大块(32x16)
+   *   ▌
+   *   ▌                     █  ← 右下小块(8x16)
    *
-   *   BL(左下)           BR(右下)
-   * 另有上/下边框、左右边框，可看出是否镜像。
+   * 判定：
+   *   - 横粗线在上面 → 上下正常；在下面 → 上下镜像
+   *   - 竖粗线在左边 → 左右正常；在右边 → 左右镜像
+   *   - 大块在左上、小块在右下 → 与上面两条一致（交叉验证）
    */
   void draw_orientation_test(IicOled &o)
   {
     o.clear();
 
-    /* 上/下边框（第 0 页与第 7 页整行） */
+    /* 1) 上边整条横粗线（第 0 页） */
     for (uint8_t col = 0U; col < 128U; ++col)
     {
       o.set_pixel(col, 0U, 0xFFU);
-      o.set_pixel(col, 7U, 0xFFU);
-    }
-    /* 左/右边框（第 0 列与第 127 列所有页） */
-    for (uint8_t page = 1U; page < 7U; ++page)
-    {
-      o.set_pixel(0U, page, 0xFFU);
-      o.set_pixel(127U, page, 0xFFU);
     }
 
-    /* 四角文字（y=1 占第 2~3 页，y=2 占第 4~5 页，避开边框） */
-    o.show_string(2U, 1U, "TL");
-    o.show_string(13U, 1U, "TR");
-    o.show_string(2U, 2U, "BL");
-    o.show_string(13U, 2U, "BR");
+    /* 2) 左边竖粗线（第 0~1 列，第 1~7 页） */
+    for (uint8_t page = 1U; page < 8U; ++page)
+    {
+      o.set_pixel(0U, page, 0xFFU);
+      o.set_pixel(1U, page, 0xFFU);
+    }
+
+    /* 3) 左上大块：第 4~35 列 × 第 1~2 页（32 x 16） */
+    for (uint8_t col = 4U; col < 36U; ++col)
+    {
+      o.set_pixel(col, 1U, 0xFFU);
+      o.set_pixel(col, 2U, 0xFFU);
+    }
+
+    /* 4) 右下小块：第 112~119 列 × 第 6~7 页（8 x 16） */
+    for (uint8_t col = 112U; col < 120U; ++col)
+    {
+      o.set_pixel(col, 6U, 0xFFU);
+      o.set_pixel(col, 7U, 0xFFU);
+    }
 
     o.refresh();
   }
