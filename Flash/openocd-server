@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# ------------------------------------------------------------------
+# OpenOCD 启动器 —— 自动挑选"支持 MSPM0"的 OpenOCD，并把脚本目录一起带上
+#
+# 为什么需要它：
+#   Ubuntu 源里的 openocd 0.12.0 没有 mspm0 flash 驱动，也没有
+#   target/ti/mspm0.cfg，直接 -f daplink.cfg 会立刻退出
+#   （Cortex-Debug 表现为 "OpenOCD: GDB Server Quit Unexpectedly"）。
+#
+# 选择顺序：
+#   1. 环境变量 OPENOCD_BIN（你显式指定的）
+#   2. EmberProbe 扩展自带（VS Code globalStorage 下的 openocd-*/bin/openocd）
+#   3. /usr/local/bin/openocd
+#   4. PATH 里的 openocd
+#   判定标准：二进制里含 mspm0 驱动（strings 里有独立的 "mspm0" 符号）
+#
+# 用法（与 openocd 完全一致，额外参数原样透传）：
+#   ./Flash/openocd-server -f Flash/daplink.cfg -c "program app.elf verify reset exit"
+#
+# 环境变量：
+#   OPENOCD_BIN     指定 openocd 可执行文件
+#   OPENOCD_SCRIPTS 指定脚本根目录（默认按二进制位置推断）
+# ------------------------------------------------------------------
+set -euo pipefail
+
+has_mspm0() {
+    [ -x "$1" ] || return 1
+    command -v strings >/dev/null 2>&1 || return 0   # 没有 strings 就不做判定
+    # 注意：不要写成 `strings | grep -q`，set -o pipefail 下 grep 提前退出会让
+    # strings 收到 SIGPIPE，整条管道被判为失败（会导致"明明支持却匹配不到"）。
+    local hits
+    hits="$(strings -a "$1" 2>/dev/null | grep -ciE '^mspm0$|mspm0_flash' || true)"
+    [ "${hits:-0}" -gt 0 ]
+}
+
+pick_openocd() {
+    local c
+    for c in \
+        "${OPENOCD_BIN:-}" \
+        "$HOME"/.config/Code/User/globalStorage/bakesheep.emberprobe/emberprobe/openocd-*/bin/openocd \
+        /usr/local/bin/openocd \
+        "$(command -v openocd 2>/dev/null || true)"
+    do
+        [ -n "${c:-}" ] && [ -e "$c" ] || continue
+        if has_mspm0 "$c"; then
+            printf '%s\n' "$c"
+            return 0
+        fi
+    done
+    return 1
+}
+
+pick_scripts() {
+    local bin_dir
+    bin_dir="$(dirname "$1")"
+    local c
+    for c in \
+        "${OPENOCD_SCRIPTS:-}" \
+        "$bin_dir/../share/openocd/scripts" \
+        "$bin_dir/../openocd/scripts" \
+        "$(dirname "$bin_dir")/share/openocd/scripts" \
+        /usr/local/share/openocd/scripts \
+        /usr/share/openocd/scripts
+    do
+        [ -n "${c:-}" ] && [ -d "$c/target" ] && { printf '%s\n' "$c"; return 0; }
+    done
+    return 1
+}
+
+OCD="$(pick_openocd || true)"
+if [ -z "${OCD}" ]; then
+    cat >&2 <<'MSG'
+❌ 没找到支持 MSPM0 的 OpenOCD。
+
+可选做法：
+  1) 指定已有版本：  export OPENOCD_BIN=/path/to/openocd
+  2) 安装带 MSPM0 支持的版本（xPack / 官方 0.13+），或直接用 J-Link：
+       bash Flash/JLink_flash.sh
+MSG
+    exit 1
+fi
+
+ARGS=()
+if SCRIPTS="$(pick_scripts "$OCD")"; then
+    ARGS+=(-s "$SCRIPTS")
+fi
+
+# 只在交互排错时提示用的是哪个版本
+if [ -n "${OPENOCD_VERBOSE:-}" ]; then
+    echo "[openocd-server] $OCD ${SCRIPTS:+(-s $SCRIPTS)}" >&2
+fi
+
+exec "$OCD" "${ARGS[@]}" "$@"

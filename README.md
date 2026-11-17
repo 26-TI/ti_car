@@ -127,8 +127,8 @@ python3 Middlewares/M0BSP/tools/sysconfig_ui.py --gen
 | CMSIS-DAP | `bash Flash/OpenOCD_flash.sh` | `Flash\OpenOCD_flash.bat` |
 
 - 脚本自动定位 `build/<BUILD_TYPE>/<工程名>.elf`，也可传 `Release` / `RelWithDebInfo`。
-- MSPM0 优先 J-Link：OpenOCD 对 MSPM0 偶发锁芯片，且需要带 `target/ti/mspm0.cfg` 的 OpenOCD
-  （Ubuntu 源里的 0.12.0 没有，脚本会先探测再给出提示）。
+- MSPM0 优先 J-Link：OpenOCD 对 MSPM0 偶发锁芯片，且**必须用带 `mspm0` 驱动的 OpenOCD**
+  （Ubuntu 源里的 0.12.0 没有）。本工程用 `Flash/openocd-server` 自动挑选，并自带 `Flash/mspm0.cfg`。
 - Windows 下 `JLINK_HOME` / `OPENOCD_HOME` 可覆盖默认安装路径。
 
 ## 7. 调试
