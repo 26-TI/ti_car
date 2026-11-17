@@ -1,0 +1,3 @@
+[submodule "Middleware/M0BSP"]
+	path = Middleware/M0BSP
+	url = https://github.com/Rh-i/M0BSP.git

@@ -1,0 +1,25 @@
+# .clangd —— clangd 用 CMake 的编译数据库，参数与工具链保持一致
+#
+# 为什么需要它：clangd 不会自己去 build/ 里找 compile_commands.json，
+# 不给它就只能靠猜，Cortex-M 的 -mcpu / 系统头全丢，头文件一路标红。
+#
+# 换预设（例如改看 Release）时把 CompilationDatabase 改成 build/Release。
+# --query-driver 不能写在这里（那是 clangd 自己的命令行参数，写进 CompileFlags 会被
+# 当成编译器参数），它放在 .vscode/settings.json 的 clangd.arguments 里。
+CompileFlags:
+  CompilationDatabase: build/Debug
+  Add:
+    - -Wno-unknown-warning-option
+
+Diagnostics:
+  Suppress:
+    - unknown-argument
+
+---
+# 参考工程 example/ 不属于本工程，不按本工程的编译数据库解析
+If:
+  PathMatch: .*example/.*
+CompileFlags:
+  CompilationDatabase: None
+Index:
+  Background: Skip

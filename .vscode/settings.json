@@ -1,0 +1,50 @@
+{
+    "cmake.useCMakePresets": "always",
+    "cmake.cmakePath": "cmake",
+
+    "clangd.arguments": [
+        "--compile-commands-dir=build/Debug",
+        "--query-driver=**/arm-none-eabi-gcc,**/arm-none-eabi-g++"
+    ],
+
+    "cortex-debug.variableUseNaturalFormat": true,
+
+    "VsCodeTaskButtons.showCounter": false,
+    "VsCodeTaskButtons.tasks": [
+        {
+            "label": "[🔨 编译]",
+            "task": "Build",
+            "tooltip": "增量编译（cmake --build --preset Debug）"
+        },
+        {
+            "label": "[🧹 重新编译]",
+            "task": "Clean_Rebuild",
+            "tooltip": "clean-first 后重新编译"
+        },
+        {
+            "label": "[🗑️ 清理]",
+            "task": "Clean",
+            "tooltip": "只清构建产物"
+        },
+        {
+            "label": "[🔌 JLink烧录]",
+            "task": "JLink_flash",
+            "tooltip": "SEGGER J-Link 烧录（推荐）"
+        },
+        {
+            "label": "[⚡ DAP烧录]",
+            "task": "OpenOCD_flash",
+            "tooltip": "OpenOCD + CMSIS-DAP 烧录"
+        },
+        {
+            "label": "[⚙️ SysConfig]",
+            "task": "SysConfig",
+            "tooltip": "打开 TI SysConfig 界面（关闭后自动生成代码）"
+        },
+        {
+            "label": "[🧩 生成配置]",
+            "task": "SysConfig_Gen",
+            "tooltip": "只跑 SysConfig CLI 生成代码"
+        }
+    ]
+}

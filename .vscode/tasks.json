@@ -1,0 +1,108 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        /* ==================== 配置 / 编译 ==================== */
+        {
+            "label": "Configure",
+            "detail": "cmake --preset Debug（生成 build/Debug）",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["--preset", "Debug"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build",
+            "detail": "增量编译（cmake --build --preset Debug）",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["--build", "--preset", "Debug"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "group": { "kind": "build", "isDefault": true },
+            "problemMatcher": [
+                {
+                    "owner": "cpp",
+                    "fileLocation": ["relative", "${workspaceFolder}"],
+                    "pattern": {
+                        "regexp": "^(.+?):(\\d+):(\\d+):\\s+(error|warning|note):\\s+(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "message": 5
+                    }
+                }
+            ],
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true }
+        },
+        {
+            "label": "Clean_Rebuild",
+            "detail": "cmake --build --preset Debug --clean-first",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["--build", "--preset", "Debug", "--clean-first"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true }
+        },
+        {
+            "label": "Clean",
+            "detail": "只清构建产物（不删 CMake 缓存）",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["--build", "--preset", "Debug", "--target", "clean"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": { "reveal": "always", "panel": "shared", "clear": true }
+        },
+
+        /* ==================== 烧录（按平台自动选 .sh / .bat） ==================== */
+        {
+            "label": "JLink_flash",
+            "detail": "SEGGER J-Link 烧录（推荐）",
+            "type": "process",
+            "command": "${workspaceFolder}/Flash/JLink_flash.sh",
+            "windows": { "command": "${workspaceFolder}\\Flash\\JLink_flash.bat" },
+            "options": { "cwd": "${workspaceFolder}" },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "OpenOCD_flash",
+            "detail": "OpenOCD + CMSIS-DAP 烧录（需要带 ti/mspm0.cfg 的 OpenOCD）",
+            "type": "process",
+            "command": "${workspaceFolder}/Flash/OpenOCD_flash.sh",
+            "windows": { "command": "${workspaceFolder}\\Flash\\OpenOCD_flash.bat" },
+            "options": { "cwd": "${workspaceFolder}" },
+            "group": "build",
+            "problemMatcher": []
+        },
+
+        /* ==================== SysConfig ==================== */
+        {
+            "label": "SysConfig",
+            "detail": "打开 TI SysConfig 界面编辑 SysConfig/*.syscfg，关闭后自动重新生成",
+            "type": "process",
+            "command": "python3",
+            "args": ["tools/sysconfig_ui.py"],
+            "windows": { "command": "python", "args": ["tools\\sysconfig_ui.py"] },
+            "options": { "cwd": "${workspaceFolder}" },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "SysConfig_Gen",
+            "detail": "只跑 SysConfig CLI 生成代码（不开界面）",
+            "type": "process",
+            "command": "python3",
+            "args": ["tools/sysconfig_ui.py", "--gen"],
+            "windows": { "command": "python", "args": ["tools\\sysconfig_ui.py", "--gen"] },
+            "options": { "cwd": "${workspaceFolder}" },
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}

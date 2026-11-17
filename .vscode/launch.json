@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "cwd": "${workspaceRoot}",
+      "type": "cortex-debug",
+      "request": "launch",
+      "name": "jlink-debug",
+      "servertype": "jlink",
+      "interface": "swd",
+      "executable": "${workspaceFolder}/build/Debug/MSPM0G3519_CAR.elf",
+      "runToEntryPoint": "main",
+      "device": "MSPM0G3519",
+      "svdFile": "${workspaceFolder}/Flash/MSPM0G351X.svd",
+      "liveWatch": {
+        "enabled": true,
+        "samplesPerSecond": 20
+      }
+    },
+    {
+      "cwd": "${workspaceRoot}",
+      "type": "cortex-debug",
+      "request": "launch",
+      "name": "cmsis-dap-debug",
+      "servertype": "openocd",
+      "executable": "${workspaceFolder}/build/Debug/MSPM0G3519_CAR.elf",
+      "runToEntryPoint": "main",
+      "configFiles": ["${workspaceFolder}/Flash/daplink.cfg"],
+      "gdbPath": "arm-none-eabi-gdb",
+      "svdFile": "${workspaceFolder}/Flash/MSPM0G351X.svd",
+      "liveWatch": {
+        "enabled": true,
+        "samplesPerSecond": 20
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+# ==============================================================================
+# MSPM0G3519_CAR 忽略项
+# ==============================================================================
+
+# ---- 构建产物（CMake 预设的 binaryDir 都在 build/ 下）----
+build/
+memory.map
+*.elf
+*.hex
+*.bin
+*.map
+*.o
+*.d
+*.su
+*.a
+
+# ---- clangd 索引与编译数据库副本 ----
+.cache/
+compile_commands.json
+
+# ---- Python（tools/ 下的一键脚本）----
+__pycache__/
+*.pyc
+.venv/
+
+# ---- VS Code 调试器临时文件 ----
+.vscode/.cortex-debug*
+
+# ---- 烧录 / 调试日志与临时 J-Link 脚本 ----
+Flash/*.log
+build/**/*.jlink
+
+# ---- 参考工程：不是本工程的文件，只作迁移对照 ----
+/example/
+
+# ---- 操作系统生成的文件 ----
+.DS_Store
+Thumbs.db
