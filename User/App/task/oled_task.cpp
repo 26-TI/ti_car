@@ -22,11 +22,11 @@ namespace
   /**
    * @brief 屏幕方向（面板级：段重映射 + COM 扫描）
    *
-   * 以 FPC 在产品左侧、折到背面焊接的安装方向为准（实机照片确认）：
-   * 画面相对目标角度整体 180° → 面板取 A1 + C8（ROT_180）。
-   * 若换屏或改成 FPC 在右侧，试 ROT_0 / MIRROR_X / MIRROR_Y。
+   * 实机几何自检结果（FPC 在左、折到背面焊接的安装方向）：
+   *   横粗线在上、竖粗线在右 → 仅左右镜像 → 需 A0 + C8（MIRROR_Y）。
+   *   推导：本面板 A0+C0 实际是上下镜像，因此 A0+C8 才是"不镜像"。
    */
-  constexpr IicOled::Rotation kOledRotation = IicOled::Rotation::ROT_180;
+  constexpr IicOled::Rotation kOledRotation = IicOled::Rotation::MIRROR_Y;
 
   /**
    * @brief 字模镜像（只影响单个字形，不影响字符位置）
@@ -51,8 +51,8 @@ namespace
     line[16] = '\0';
   }
 
-  /** @brief 是否显示方向自检页（确认方向后改 false） */
-  constexpr bool kShowOrientationTest = true;
+  /** @brief 是否显示方向自检页（正常使用改 false） */
+  constexpr bool kShowOrientationTest = false;
 
   /**
    * @brief 方向自检页：只用几何图形，不依赖字形，便于照片判定
