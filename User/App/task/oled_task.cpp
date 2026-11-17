@@ -20,20 +20,21 @@ namespace
   constexpr uint32_t kRefreshMs = 200U;  ///< 刷新周期
 
   /**
-   * @brief 屏幕方向
+   * @brief 屏幕方向（面板级：段重映射 + COM 扫描）
    *
-   * 这块面板原来用 A1+C8 会"上下左右都颠倒"，改成 ROT_0（A0+C0）。
-   * 换屏后如果方向不对，依次试 ROT_180 / MIRROR_X / MIRROR_Y。
+   * 以 FPC 在产品左侧、折到背面焊接的安装方向为准（实机照片确认）：
+   * 画面相对目标角度整体 180° → 面板取 A1 + C8（ROT_180）。
+   * 若换屏或改成 FPC 在右侧，试 ROT_0 / MIRROR_X / MIRROR_Y。
    */
-  constexpr IicOled::Rotation kOledRotation = IicOled::Rotation::ROT_0;
+  constexpr IicOled::Rotation kOledRotation = IicOled::Rotation::ROT_180;
 
   /**
    * @brief 字模镜像（只影响单个字形，不影响字符位置）
    *
-   * 当前取 HV（上下左右都翻）——等你拍照确认后再定最终值：
-   * NONE / H（左右）/ V（上下）/ HV（180°）。
+   * 面板方向调好后字形即为正，默认 NONE；
+   * 仅当单字还反时再改成 H / V / HV。
    */
-  constexpr IicOled::FontFlip kFontFlip = IicOled::FontFlip::HV;
+  constexpr IicOled::FontFlip kFontFlip = IicOled::FontFlip::NONE;
 
   /** @brief 把一行补满 16 字符，避免数字变短时残留旧字符 */
   void pad_line(char *line)
