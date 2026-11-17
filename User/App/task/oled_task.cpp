@@ -50,6 +50,44 @@ namespace
     }
     line[16] = '\0';
   }
+
+  /** @brief 是否显示方向自检页（确认方向后改 false） */
+  constexpr bool kShowOrientationTest = true;
+
+  /**
+   * @brief 方向自检页：边框 + 四角标注
+   *
+   * 画面含义（屏幕应当的“正方向”）：
+   *   TL(左上)           TR(右上)
+   *
+   *   BL(左下)           BR(右下)
+   * 另有上/下边框、左右边框，可看出是否镜像。
+   */
+  void draw_orientation_test(IicOled &o)
+  {
+    o.clear();
+
+    /* 上/下边框（第 0 页与第 7 页整行） */
+    for (uint8_t col = 0U; col < 128U; ++col)
+    {
+      o.set_pixel(col, 0U, 0xFFU);
+      o.set_pixel(col, 7U, 0xFFU);
+    }
+    /* 左/右边框（第 0 列与第 127 列所有页） */
+    for (uint8_t page = 1U; page < 7U; ++page)
+    {
+      o.set_pixel(0U, page, 0xFFU);
+      o.set_pixel(127U, page, 0xFFU);
+    }
+
+    /* 四角文字（y=1 占第 2~3 页，y=2 占第 4~5 页，避开边框） */
+    o.show_string(2U, 1U, "TL");
+    o.show_string(13U, 1U, "TR");
+    o.show_string(2U, 2U, "BL");
+    o.show_string(13U, 2U, "BR");
+
+    o.refresh();
+  }
 } // namespace
 
 void oled_task(void *arg)
@@ -63,6 +101,17 @@ void oled_task(void *arg)
   }
 
   device_oled.set_font_flip(kFontFlip);
+
+  if (kShowOrientationTest)
+  {
+    /* 方向自检：四角标注 + 边框，拍一张照片即可确定 Rotation/FontFlip */
+    draw_orientation_test(device_oled);
+    for (;;)
+    {
+      vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+  }
+
   device_oled.clear();
   device_oled.show_string(0U, 0U, "helloworld");
   device_oled.refresh();
