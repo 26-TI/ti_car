@@ -32,8 +32,15 @@ extern "C"
   /** @brief 上电变调提示音（阻塞，调度器启动前调用） */
   void boot_tune_play(void);
 
-  /** @brief 编码器 SA/SB 边沿计数（中断里累加） */
-  extern volatile uint32_t g_encoder_count;
+  /** @brief 编码器 4 倍频累计位置（有符号，正转增/反转减） */
+  int32_t input_encoder_count(void);
+
+  /** @brief 取编码器增量（读后清零，任务里用） */
+  int32_t input_encoder_take_delta(void);
+
+  /** @brief 编码器计数清零 */
+  void input_encoder_reset(void);
+
   /** @brief SS + KEY 松开次数（中断里累加） */
   extern volatile uint32_t g_switch_press_count;
 

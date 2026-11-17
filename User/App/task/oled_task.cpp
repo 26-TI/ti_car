@@ -50,7 +50,7 @@ void oled_task(void *arg)
 
   for (;;)
   {
-    user_system::format(line, sizeof(line), "SA/SB: %lu", (unsigned long)g_encoder_count);
+    user_system::format(line, sizeof(line), "ENC: %ld", (long)input_encoder_count());
     pad_line(line);
     device_oled.show_string(0U, 1U, line);
 

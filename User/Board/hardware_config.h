@@ -93,6 +93,15 @@
 #define M0BSP_ENABLE_HEARTBEAT 1
 /** @brief 1=启用 EXTI 输入（KEY/编码器）与提示音任务 */
 #define M0BSP_ENABLE_INPUT 1
+
+/* ==================== 编码器极性 / 方向（4 倍频正交解码） ==================== */
+
+/** @brief A 相电平取反（接线反了、上拉/下拉相反时置 1） */
+#define M0BSP_ENCODER_INVERT_A 0
+/** @brief B 相电平取反 */
+#define M0BSP_ENCODER_INVERT_B 0
+/** @brief 计数方向翻转（顺时针变逆时针时置 1） */
+#define M0BSP_ENCODER_INVERT_DIR 0
 /** @brief 1=启用 OLED 显示任务 */
 #define M0BSP_ENABLE_OLED 1
 
