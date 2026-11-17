@@ -18,8 +18,38 @@
 #include "board_cfg.hpp"
 #include "board_log.hpp"
 
+/**
+ * @brief 时钟初始化之前的探针：用复位默认时钟（SYSOSC）直接闪 LED
+ *
+ * 用途：冷启动（按复位/断电重上电）后若连 main 都没跑到，
+ *       这里也不会闪；若能闪但 UART 没输出，说明卡在 SYSCFG_DL_SYSCTL_init()
+ *       的晶振/PLL 等待里。
+ *
+ * @note 只依赖 IOMUX + GPIO，不需要任何外设时钟初始化。
+ */
+static void early_blink(unsigned times)
+{
+  DL_GPIO_initDigitalOutput(LED_PIN_LED_IOMUX);
+  DL_GPIO_enableOutput(LED_PORT, LED_PIN_LED_PIN);
+
+  for (unsigned i = 0U; i < times; ++i)
+  {
+    DL_GPIO_setPins(LED_PORT, LED_PIN_LED_PIN);
+    for (volatile uint32_t d = 0U; d < 600000U; d = d + 1U)
+    {
+    }
+    DL_GPIO_clearPins(LED_PORT, LED_PIN_LED_PIN);
+    for (volatile uint32_t d = 0U; d < 600000U; d = d + 1U)
+    {
+    }
+  }
+}
+
 int main(void)
 {
+  /* 冷启动探针：上电后应先闪 3 下 */
+  early_blink(3U);
+
   SYSCFG_DL_init();
   board_trace("\r\n[boot] syscfg ok\r\n");
 
