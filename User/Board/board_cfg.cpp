@@ -18,20 +18,20 @@ BspUart<M0BSP_UART_BUF_SIZE> bsp_uart3;
 BspUart<M0BSP_UART_BUF_SIZE> bsp_uart4;
 BspUart<M0BSP_UART_BUF_SIZE> bsp_uart7;
 
-BspPwm     bsp_pwm_a0;
-BspPwm     bsp_pwm_buzzer;
-BspQei     bsp_qei_g8;
-BspQei     bsp_qei_g9;
-BspI2c     bsp_i2c_oled;
-BspI2c     bsp_i2c_1;
-BspI2c     bsp_i2c_2;
-BspCan     bsp_can;
+BspPwm       bsp_pwm_a0;
+BspPwm       bsp_pwm_buzzer;
+BspQei       bsp_qei_g8;
+BspQei       bsp_qei_g9;
+BspI2c       bsp_i2c_oled;
+BspI2c       bsp_i2c_1;
+BspI2c       bsp_i2c_2;
+BspCan       bsp_can;
 DeviceBuzzer device_buzzer;
 
-BspGpio  bsp_led;
-BspGpio  bsp_sw_5v;
-BspGpio  bsp_sw_vcc;
-IicOled  device_oled;
+BspGpio bsp_led;
+BspGpio bsp_sw_5v;
+BspGpio bsp_sw_vcc;
+IicOled device_oled;
 
 /** @brief 0=全部初始化成功；位定义见 board_cfg.hpp 的 BoardFaultBits */
 volatile uint32_t g_board_fault = 0U;
