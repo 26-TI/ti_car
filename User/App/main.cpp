@@ -35,13 +35,9 @@ static void early_blink(unsigned times)
   for (unsigned i = 0U; i < times; ++i)
   {
     DL_GPIO_setPins(LED_PORT, LED_PIN_LED_PIN);
-    for (volatile uint32_t d = 0U; d < 600000U; d = d + 1U)
-    {
-    }
+    DL_Common_delayCycles(8000000U); /* 复位默认 SYSOSC 32 MHz 下约 250 ms */
     DL_GPIO_clearPins(LED_PORT, LED_PIN_LED_PIN);
-    for (volatile uint32_t d = 0U; d < 600000U; d = d + 1U)
-    {
-    }
+    DL_Common_delayCycles(8000000U);
   }
 }
 
