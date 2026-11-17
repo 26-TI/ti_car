@@ -27,6 +27,14 @@ namespace
    */
   constexpr IicOled::Rotation kOledRotation = IicOled::Rotation::ROT_0;
 
+  /**
+   * @brief 字模镜像（只影响单个字形，不影响字符位置）
+   *
+   * 现象：文本位置对，但每个字看起来上下左右都反 → 字模位序与面板约定相反，
+   * 用 HV 修正。若只是单向反，改成 H 或 V；正常则用 NONE。
+   */
+  constexpr IicOled::FontFlip kFontFlip = IicOled::FontFlip::HV;
+
   /** @brief 把一行补满 16 字符，避免数字变短时残留旧字符 */
   void pad_line(char *line)
   {
@@ -53,6 +61,7 @@ void oled_task(void *arg)
     return;
   }
 
+  device_oled.set_font_flip(kFontFlip);
   device_oled.clear();
   device_oled.show_string(0U, 0U, "helloworld");
   device_oled.refresh();
