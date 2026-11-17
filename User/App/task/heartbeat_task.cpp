@@ -11,6 +11,7 @@
 #include "task.h"
 
 #include "board_cfg.hpp"
+#include "board_log.hpp"
 
 namespace
 {
@@ -31,6 +32,9 @@ void heartbeat_task(void *arg)
   bsp_led.write(led_on);
   bsp_sw_5v.write(sw_high);
   bsp_sw_vcc.write(sw_high);
+
+  /* 打印口自检：看到这一行说明 UART_7 与 TX DMA 都通了 */
+  board_printf("\r\n[MSPM0G3519_CAR] boot ok, build %s %s\r\n", __DATE__, __TIME__);
 
   TickType_t last = xTaskGetTickCount();
 

@@ -36,7 +36,7 @@ extern BspUart<M0BSP_UART_BUF_SIZE> bsp_uart0; ///< UART_0：PA0/PA1
 extern BspUart<M0BSP_UART_BUF_SIZE> bsp_uart1; ///< UART_1：PB4/PB5
 extern BspUart<M0BSP_UART_BUF_SIZE> bsp_uart3; ///< UART_3：PB2/PB3（调试打印）
 extern BspUart<M0BSP_UART_BUF_SIZE> bsp_uart4; ///< UART_4：PB10/PB11
-extern BspUart<M0BSP_UART_BUF_SIZE> bsp_uart7; ///< UART_7：PB17/PB18
+extern BspUart<M0BSP_UART_BUF_SIZE> bsp_uart7; ///< UART_7：PB17(TX)/PB18(RX) —— **打印串口**，统一走 board_printf()
 
 /* ==================== PWM ==================== */
 

@@ -110,7 +110,7 @@ python3 Middlewares/M0BSP/tools/sysconfig_ui.py --gen
 
 | 外设 | 配置 |
 | --- | --- |
-| UART_0 / 1 / 3 / 4 / 7 | 115200、FIFO、RX + RX_TIMEOUT 中断、**TX DMA（DMA_CH0…CH4）** |
+| UART_0 / 1 / 3 / 4 / 7 | 115200、FIFO、RX + RX_TIMEOUT 中断、**TX DMA（DMA_CH0…CH4）**<br>**UART_7 = 打印串口**（PB17 TX / PB18 RX），统一用 `board_printf()` |
 | MCAN0 | 经典 CAN 1 Mbps、开启中断（RF0N + TEFN） |
 | PWM_A0 | TIMA0 四通道（PB8/PB12/PA10/PB13） |
 | PWM_G12_BUZZER | TIMG12 CC1（PB14），由 device 层 `DeviceBuzzer` 使用 |
