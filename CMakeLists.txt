@@ -44,10 +44,14 @@ add_executable(${CMAKE_PROJECT_NAME}.elf
 )
 
 include_directories(
-    ${FREERTOS_DIR}/include
-    ${FREERTOS_DIR}/portable/GCC/ARM_CM0
     ${CMAKE_CURRENT_SOURCE_DIR}/User/Board
     ${CMAKE_CURRENT_SOURCE_DIR}/User/App
+)
+
+# FreeRTOS 也是库：它内部的告警不刷屏，我们自己的代码（Middlewares/M0BSP、User/）照常 -Wall
+include_directories(SYSTEM
+    ${FREERTOS_DIR}/include
+    ${FREERTOS_DIR}/portable/GCC/ARM_CM0
 )
 
 # ------------------------------------------------------------------------------

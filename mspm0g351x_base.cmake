@@ -83,11 +83,16 @@ add_compile_options(
 
 # ------------------------------------------------------------------------------
 # 包含路径
+#   - SysConfig 生成代码：普通 include，生成代码的告警照常暴露
+#   - TI SDK / CMSIS：系统头（-isystem），第三方头内部的告警不刷屏
+#     （例如 C++20 下 dl_adc12.h 把不同枚举按位或的 -Wdeprecated-enum-enum-conversion）
+#   - -Wall 对 Middlewares/ 与 User/ 自己的代码仍然完全生效
 # ------------------------------------------------------------------------------
-include_directories(
+include_directories(${SYSCONFIG_PATH})
+
+include_directories(SYSTEM
     ${MSPM0_SDK_PATH}/source
     ${MSPM0_SDK_PATH}/source/third_party/CMSIS/Core/Include
-    ${SYSCONFIG_PATH}
 )
 
 # ------------------------------------------------------------------------------
