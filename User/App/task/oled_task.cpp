@@ -30,10 +30,11 @@ namespace
   /**
    * @brief 字模镜像（只影响单个字形，不影响字符位置）
    *
-   * 现象：文本位置对，但每个字看起来上下左右都反 → 字模位序与面板约定相反，
-   * 用 HV 修正。若只是单向反，改成 H 或 V；正常则用 NONE。
+   * 本板实测：字模表按 MSB 在左存储，而面板按 LSB 在左扫描，
+   * 所以只需**左右翻转（H）**；上下方向本来是对的。
+   * 若以后换字库/换屏：单向反改 H 或 V，180° 用 HV，正常用 NONE。
    */
-  constexpr IicOled::FontFlip kFontFlip = IicOled::FontFlip::HV;
+  constexpr IicOled::FontFlip kFontFlip = IicOled::FontFlip::H;
 
   /** @brief 把一行补满 16 字符，避免数字变短时残留旧字符 */
   void pad_line(char *line)
