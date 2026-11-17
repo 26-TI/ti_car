@@ -11,11 +11,14 @@
 #include "task.h"
 
 #include "board_cfg.hpp"
-#include "hardware_config.h"
 #include "service/user_system.hpp"
 
 namespace
 {
+  /* ---- 显示屏配置 ---- */
+  constexpr uint8_t  kOledAddr    = 0x3CU; ///< SSD1306 从机地址
+  constexpr uint32_t kRefreshMs   = 200U;  ///< 刷新周期
+
   /** @brief 把一行补满 16 字符，避免数字变短时残留旧字符 */
   void pad_line(char *line)
   {
@@ -36,7 +39,7 @@ void oled_task(void *arg)
 {
   (void)arg;
 
-  if (!device_oled.init(&bsp_i2c_oled, M0BSP_OLED_ADDR))
+  if (!device_oled.init(&bsp_i2c_oled, kOledAddr))
   {
     vTaskDelete(nullptr);
     return;
@@ -60,6 +63,6 @@ void oled_task(void *arg)
 
     device_oled.refresh();
 
-    vTaskDelay(pdMS_TO_TICKS(M0BSP_OLED_REFRESH_MS));
+    vTaskDelay(pdMS_TO_TICKS(kRefreshMs));
   }
 }

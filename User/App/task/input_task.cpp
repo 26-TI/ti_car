@@ -18,15 +18,24 @@
 #include "bsp/bsp_encoder_exti.hpp"
 #include "bsp/bsp_gpio_irq.hpp"
 #include "board_cfg.hpp"
-#include "hardware_config.h"
 
 extern "C"
 {
+  /** @brief SS + KEY 松开次数（中断里累加，OLED 显示用） */
   volatile uint32_t g_switch_press_count = 0U;
 }
 
 namespace
 {
+  /* ---- 本任务的业务配置 ---- */
+  constexpr uint32_t kBeepFreqHz = 2700U; ///< 松开提示音频率
+  constexpr uint32_t kBeepMs     = 60U;   ///< 提示音时长
+
+  /* 编码器极性/方向：接线反了就改这三个 */
+  constexpr bool kEncoderInvertA   = false; ///< A 相电平取反
+  constexpr bool kEncoderInvertB   = false; ///< B 相电平取反
+  constexpr bool kEncoderInvertDir = false; ///< 计数方向翻转
+
   QueueHandle_t  s_events = nullptr;
   BspEncoderExti s_encoder;
 
@@ -92,9 +101,9 @@ void input_init(void)
   s_encoder.init({KEY_PORT,
                   KEY_PIN_ENCODER_SA_PIN,
                   KEY_PIN_ENCODER_SB_PIN,
-                  M0BSP_ENCODER_INVERT_A != 0,
-                  M0BSP_ENCODER_INVERT_B != 0,
-                  M0BSP_ENCODER_INVERT_DIR != 0});
+                  kEncoderInvertA,
+                  kEncoderInvertB,
+                  kEncoderInvertDir});
 
   BspGpioIrq::attach({KEY_PORT, KEY_PIN_ENCODER_SA_PIN, on_encoder_edge, &s_encoder});
   BspGpioIrq::attach({KEY_PORT, KEY_PIN_ENCODER_SB_PIN, on_encoder_edge, &s_encoder});
@@ -118,9 +127,9 @@ void input_task(void *arg)
     }
 
     /* SS / KEY 松开：短鸣一声（SA/SB 只计数，不响） */
-    device_buzzer.set_frequency(M0BSP_BEEP_FREQ_HZ);
+    device_buzzer.set_frequency(kBeepFreqHz);
     device_buzzer.on();
-    vTaskDelay(pdMS_TO_TICKS(M0BSP_BEEP_MS));
+    vTaskDelay(pdMS_TO_TICKS(kBeepMs));
     device_buzzer.off();
   }
 }

@@ -14,7 +14,7 @@
 
 void app_init(void)
 {
-#if M0BSP_ENABLE_INPUT
+#if APP_ENABLE_INPUT
   /* 上电变调提示音（阻塞约 360 ms，此时还没起调度器） */
   boot_tune_play();
   /* EXTI 注册 + 队列 + NVIC：放在响铃之后，避免播放期间进中断 */
@@ -26,19 +26,19 @@ void app_init(void)
               M0BSP_CPU_MON_PRIO, nullptr);
 #endif
 
-#if M0BSP_ENABLE_HEARTBEAT
-  xTaskCreate(heartbeat_task, "heart", M0BSP_HEARTBEAT_STACK, nullptr,
-              M0BSP_HEARTBEAT_PRIO, nullptr);
+#if APP_ENABLE_HEARTBEAT
+  xTaskCreate(heartbeat_task, "heart", APP_HEARTBEAT_STACK, nullptr,
+              APP_HEARTBEAT_PRIO, nullptr);
 #endif
 
-#if M0BSP_ENABLE_INPUT
-  xTaskCreate(input_task, "input", M0BSP_INPUT_STACK, nullptr,
-              M0BSP_INPUT_PRIO, nullptr);
+#if APP_ENABLE_INPUT
+  xTaskCreate(input_task, "input", APP_INPUT_STACK, nullptr,
+              APP_INPUT_PRIO, nullptr);
 #endif
 
-#if M0BSP_ENABLE_OLED
-  xTaskCreate(oled_task, "oled", M0BSP_OLED_STACK, nullptr,
-              M0BSP_OLED_PRIO, nullptr);
+#if APP_ENABLE_OLED
+  xTaskCreate(oled_task, "oled", APP_OLED_STACK, nullptr,
+              APP_OLED_PRIO, nullptr);
 #endif
 
   /* 业务任务请在 User/App/task/ 下实现，并在这里创建 */

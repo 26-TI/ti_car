@@ -2,7 +2,7 @@
  * @file heartbeat_task.cpp
  * @brief 心跳任务：LED 500 ms 翻转，两路电子开关 3 s 高 / 3 s 低
  *
- * 所有时间都从 hardware_config.h 取，改那里即可，不用动逻辑。
+ * 时序都在本文件顶部的常量里，改这里即可。
  */
 
 #include "task/app_tasks.hpp"
@@ -11,7 +11,13 @@
 #include "task.h"
 
 #include "board_cfg.hpp"
-#include "hardware_config.h"
+
+namespace
+{
+  constexpr uint32_t kTickMs        = 10U;   ///< 任务节拍
+  constexpr uint32_t kLedToggleMs   = 500U;  ///< LED 翻转周期
+  constexpr uint32_t kSwitchPhaseMs = 3000U; ///< 电子开关高/低相位时长
+} // namespace
 
 void heartbeat_task(void *arg)
 {
@@ -30,20 +36,20 @@ void heartbeat_task(void *arg)
 
   for (;;)
   {
-    vTaskDelayUntil(&last, pdMS_TO_TICKS(M0BSP_HEARTBEAT_TICK_MS));
+    vTaskDelayUntil(&last, pdMS_TO_TICKS(kTickMs));
 
-    /* ---- LED：每 M0BSP_LED_TOGGLE_MS 翻转一次 ---- */
-    led_ms += M0BSP_HEARTBEAT_TICK_MS;
-    if (led_ms >= M0BSP_LED_TOGGLE_MS)
+    /* ---- LED：每 kLedToggleMs 翻转一次 ---- */
+    led_ms += kTickMs;
+    if (led_ms >= kLedToggleMs)
     {
       led_ms = 0U;
       led_on = !led_on;
       bsp_led.write(led_on);
     }
 
-    /* ---- 电子开关：高 M0BSP_SWITCH_PHASE_MS → 低 M0BSP_SWITCH_PHASE_MS ---- */
-    switch_ms += M0BSP_HEARTBEAT_TICK_MS;
-    if (switch_ms >= M0BSP_SWITCH_PHASE_MS)
+    /* ---- 电子开关：高 kSwitchPhaseMs → 低 kSwitchPhaseMs ---- */
+    switch_ms += kTickMs;
+    if (switch_ms >= kSwitchPhaseMs)
     {
       switch_ms = 0U;
       sw_high   = !sw_high;

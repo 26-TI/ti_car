@@ -19,9 +19,10 @@ MSPM0G3519_CAR/
 │     └─ tools/                init_project.py（结构自检/补齐）、sysconfig_ui.py（开界面）
 │                              check_layers.py（分层检查）
 ├─ User/
-│  ├─ Board/                   板级唯一配置入口：board_cfg / board_instances / hardware_config
+│  ├─ Board/                   板级配置：board_cfg / board_instances / hardware_config（只放硬件宏）
 │  │                           / FreeRTOSConfig.h / freertos_hooks.cpp / sysmem.c
 │  └─ App/                     main.cpp + app_init()（默认只创建系统任务）
+│      └─ task/                业务任务，各自时序/音型/地址配置写在本文件顶部
 ├─ Flash/                      烧录脚本与 OpenOCD 配置、SVD
 ├─ .vscode/                    tasks / launch / settings（含 Task Button）
 └─ example/                    ★ 仅作迁移参考，已 gitignore，不属于本工程

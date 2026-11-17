@@ -8,6 +8,21 @@
 
 #include <stdint.h>
 
+/* ==================== 任务开关（应用层配置） ==================== */
+
+#define APP_ENABLE_HEARTBEAT 1 ///< LED + 两路电子开关心跳
+#define APP_ENABLE_INPUT 1     ///< EXTI 输入（编码器/按键）与提示音
+#define APP_ENABLE_OLED 1      ///< OLED 显示
+
+/* ==================== 任务参数 ==================== */
+
+#define APP_HEARTBEAT_STACK 0x100U
+#define APP_HEARTBEAT_PRIO 2U
+#define APP_INPUT_STACK 0x100U
+#define APP_INPUT_PRIO 2U
+#define APP_OLED_STACK 0x180U
+#define APP_OLED_PRIO 1U
+
 #ifdef __cplusplus
 extern "C"
 {

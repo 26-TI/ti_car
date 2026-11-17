@@ -14,6 +14,10 @@
 
 namespace
 {
+  /* ---- 上电变调音型（TIMG12 是 16 位/80 MHz，最低约 1220 Hz） ---- */
+  constexpr uint32_t kNoteHz[3] = {1500U, 2000U, 2700U};
+  constexpr uint32_t kNoteMs    = 120U;
+
   /** @brief 发一个音，阻塞 ms 毫秒 */
   void note(uint32_t hz, uint32_t ms)
   {
@@ -29,7 +33,8 @@ namespace
 
 void boot_tune_play(void)
 {
-  note(M0BSP_BOOT_TUNE_F1, M0BSP_BOOT_TUNE_NOTE_MS);
-  note(M0BSP_BOOT_TUNE_F2, M0BSP_BOOT_TUNE_NOTE_MS);
-  note(M0BSP_BOOT_TUNE_F3, M0BSP_BOOT_TUNE_NOTE_MS);
+  for (uint32_t hz : kNoteHz)
+  {
+    note(hz, kNoteMs);
+  }
 }
