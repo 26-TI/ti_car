@@ -36,17 +36,6 @@ namespace
    */
   constexpr IicOled::FontFlip kFontFlip = IicOled::FontFlip::NONE;
 
-  /** @brief 上电/复位后等 SSD1306 稳定的时间 (ms)
-   *
-   * J-Link 烧录是 `reset` 后立即运行，没有调试器在 main 的停顿；
-   * 面板（RST 随单片机复位或刚上电）需要约 100 ms 才能接受命令，
-   * 太早发初始化序列会出现花屏。调试时调试器的停顿掩盖了这个时序问题。
-   */
-  constexpr uint32_t kOledPowerUpDelayMs = 1000U;
-
-  /** @brief 初始化/重新初始化失败后的重试间隔 (ms) */
-  constexpr uint32_t kOledRetryMs = 500U;
-
   /** @brief 把一行补满 16 字符，避免数字变短时残留旧字符 */
   void pad_line(char *line)
   {
@@ -118,14 +107,10 @@ void oled_task(void *arg)
 {
   (void)arg;
 
-  /* 等面板稳定再发初始化序列（烧录后立即运行也能正常点亮） */
-  vTaskDelay(pdMS_TO_TICKS(kOledPowerUpDelayMs));
-
-  /* 初始化直到成功：烧录复位后总线/从机状态不干净时，前几轮可能写失败 */
-  while (!device_oled.init(&bsp_i2c_oled, kOledAddr, kOledRotation))
+  if (!device_oled.init(&bsp_i2c_oled, kOledAddr, kOledRotation))
   {
-    g_board_fault |= BOARD_FAULT_I2C_OLED;
-    vTaskDelay(pdMS_TO_TICKS(kOledRetryMs));
+    vTaskDelete(nullptr);
+    return;
   }
 
   device_oled.set_font_flip(kFontFlip);
@@ -148,23 +133,6 @@ void oled_task(void *arg)
 
   for (;;)
   {
-    /* 上一帧写失败（总线被占/从机未释放）→ 重新初始化并重画，避免停在旧画面 */
-    if (!device_oled.io_ok())
-    {
-      if (device_oled.init(&bsp_i2c_oled, kOledAddr, kOledRotation))
-      {
-        device_oled.set_font_flip(kFontFlip);
-        device_oled.clear();
-        device_oled.show_string(0U, 0U, "helloworld");
-      }
-      else
-      {
-        g_board_fault |= BOARD_FAULT_I2C_OLED;
-        vTaskDelay(pdMS_TO_TICKS(kOledRetryMs));
-        continue;
-      }
-    }
-
     user_system::format(line, sizeof(line), "ENC: %ld", (long)input_encoder_count());
     pad_line(line);
     device_oled.show_string(0U, 1U, line);

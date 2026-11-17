@@ -16,17 +16,30 @@
 
 #include "app_task.hpp"
 #include "board_cfg.hpp"
+#include "board_log.hpp"
 
 int main(void)
 {
   SYSCFG_DL_init();
+  board_trace("\r\n[boot] syscfg ok\r\n");
+
   board_init();
+  board_trace("[boot] board ok, fault=");
+  board_trace_hex((unsigned int)g_board_fault);
+  board_trace("\r\n");
 
   app_init();
+  board_trace("[boot] app ok, heap=");
+  board_trace_hex((unsigned int)xPortGetFreeHeapSize());
+  board_trace("\r\n");
 
   vTaskStartScheduler();
 
-  /* 调度器启动失败（堆不足）才会走到这里 */
+  /* 正常不会返回；返回说明空闲/定时器任务创建失败（通常是堆不够） */
+  board_trace("[boot] SCHEDULER RETURNED, heap=");
+  board_trace_hex((unsigned int)xPortGetFreeHeapSize());
+  board_trace("\r\n");
+
   while (1)
   {
   }

@@ -27,6 +27,17 @@ extern "C"
    */
   int board_printf(const char *fmt, ...);
 
+  /**
+   * @brief 启动早期跟踪：直接轮询写 UART_7（不用 DMA / StreamBuffer / 堆）
+   *
+   * @note 可在调度器启动之前、甚至怀疑堆失败时调用；只依赖 SysConfig 已初始化 UART_7。
+   *       用于定位“复位后卡在哪一步”。
+   */
+  void board_trace(const char *s);
+
+  /** @brief 以 0xXXXXXXXX 形式输出一个 32 位值（配合 board_trace 使用） */
+  void board_trace_hex(unsigned int v);
+
 #ifdef __cplusplus
 }
 #endif

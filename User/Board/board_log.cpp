@@ -10,6 +10,39 @@
 #include "board_cfg.hpp"
 #include "service/user_system.hpp"
 
+void board_trace(const char *s)
+{
+  if (s == nullptr)
+  {
+    return;
+  }
+
+  while (*s != '\0')
+  {
+    while (DL_UART_Main_isBusy(UART_7_INST))
+    {
+    }
+    DL_UART_Main_transmitDataBlocking(UART_7_INST, static_cast<uint8_t>(*s));
+    ++s;
+  }
+}
+
+void board_trace_hex(unsigned int v)
+{
+  static const char kDigits[] = "0123456789ABCDEF";
+  char              buf[11];
+
+  buf[0] = '0';
+  buf[1] = 'x';
+  for (int i = 0; i < 8; ++i)
+  {
+    buf[2 + i] = kDigits[(v >> ((7 - i) * 4)) & 0xFU];
+  }
+  buf[10] = '\0';
+
+  board_trace(buf);
+}
+
 namespace
 {
   /** @brief 单次打印的最大长度（含 '\0'） */
