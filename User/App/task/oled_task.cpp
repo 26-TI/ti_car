@@ -36,6 +36,14 @@ namespace
    */
   constexpr IicOled::FontFlip kFontFlip = IicOled::FontFlip::NONE;
 
+  /** @brief 上电/复位后等 SSD1306 稳定的时间 (ms)
+   *
+   * J-Link 烧录是 `reset` 后立即运行，没有调试器在 main 的停顿；
+   * 面板（RST 随单片机复位或刚上电）需要约 100 ms 才能接受命令，
+   * 太早发初始化序列会出现花屏。调试时调试器的停顿掩盖了这个时序问题。
+   */
+  constexpr uint32_t kOledPowerUpDelayMs = 200U;
+
   /** @brief 把一行补满 16 字符，避免数字变短时残留旧字符 */
   void pad_line(char *line)
   {
@@ -106,6 +114,9 @@ namespace
 void oled_task(void *arg)
 {
   (void)arg;
+
+  /* 等面板稳定再发初始化序列（烧录后立即运行也能正常点亮） */
+  vTaskDelay(pdMS_TO_TICKS(kOledPowerUpDelayMs));
 
   if (!device_oled.init(&bsp_i2c_oled, kOledAddr, kOledRotation))
   {
